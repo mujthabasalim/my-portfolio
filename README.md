@@ -27,18 +27,21 @@ A professional portfolio website built with React, TypeScript, and Tailwind CSS.
 ### Installation
 
 1. Clone the repository:
+
    ```sh
-   git clone <your-repo-url>
+   git clone https://github.com/mujthabasalim/my-portfolio.git
    cd my-portfolio
    ```
 
 2. Install dependencies:
+
    ```sh
    npm install
    ```
 
 3. Set up environment variables:
    Create a `.env` file in the root directory and add your Supabase credentials:
+
    ```env
    VITE_SUPABASE_URL=your_supabase_url
    VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
@@ -52,7 +55,9 @@ A professional portfolio website built with React, TypeScript, and Tailwind CSS.
 ## Deployment
 
 Build the project for production:
+
 ```sh
 npm run build
 ```
+
 The output will be in the `dist/` directory, ready to be deployed to platforms like Vercel, Netlify, or GitHub Pages.

@@ -72,7 +72,10 @@ const HeroSection = () => {
       {/* Animated background */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-primary/5 dark:bg-primary/5 blur-3xl animate-pulse-glow" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full bg-accent/5 dark:bg-accent/5 blur-3xl animate-pulse-glow" style={{ animationDelay: "1.5s" }} />
+        <div
+          className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full bg-accent/5 dark:bg-accent/5 blur-3xl animate-pulse-glow"
+          style={{ animationDelay: "1.5s" }}
+        />
 
         {/* Floating particles */}
         {Array.from({ length: 30 }).map((_, i) => (
@@ -125,8 +128,7 @@ const HeroSection = () => {
             transition={{ duration: 0.8, delay: 0.15 }}
             className="font-heading text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-4"
           >
-            Hi, I'm{" "}
-            <span className="gradient-text">Mujthaba Salim</span>
+            Hi, I'm <span className="gradient-text">Mujthaba Salim</span>
           </motion.h1>
 
           <motion.div
@@ -158,10 +160,10 @@ const HeroSection = () => {
             className="flex flex-col sm:flex-row gap-4"
           >
             <a
-              href="#projects"
+              href="#contact"
               className="group relative inline-flex items-center justify-center px-8 py-3.5 rounded-lg bg-primary text-primary-foreground font-medium text-sm overflow-hidden transition-all duration-300"
             >
-              <span className="relative z-10">View Projects</span>
+              <span className="relative z-10">Contact Me</span>
               <div className="absolute inset-0 bg-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </a>
             <a
@@ -188,7 +190,9 @@ const HeroSection = () => {
               <div className="w-3 h-3 rounded-full bg-destructive/80" />
               <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
               <div className="w-3 h-3 rounded-full bg-green-500/80" />
-              <span className="text-xs text-muted-foreground ml-2">server.js</span>
+              <span className="text-xs text-muted-foreground ml-2">
+                server.js
+              </span>
             </div>
             <div className="space-y-1">
               {codeLines.map((line, i) => (
@@ -198,7 +202,9 @@ const HeroSection = () => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.4, delay: 1 + line.delay }}
                 >
-                  <span className="text-muted-foreground mr-3 select-none">{i + 1}</span>
+                  <span className="text-muted-foreground mr-3 select-none">
+                    {i + 1}
+                  </span>
                   <span className="text-primary/90">{line.text}</span>
                 </motion.div>
               ))}
@@ -209,7 +215,9 @@ const HeroSection = () => {
                 className="mt-3 pt-3 border-t border-border"
               >
                 <span className="text-muted-foreground">$</span>{" "}
-                <span className="text-primary">Server running on port 3000</span>
+                <span className="text-primary">
+                  Server running on port 3000
+                </span>
                 <motion.span
                   animate={{ opacity: [1, 0] }}
                   transition={{ duration: 0.8, repeat: Infinity }}

@@ -8,7 +8,7 @@ import WorkflowSection from "@/components/WorkflowSection";
 import TerminalSection from "@/components/TerminalSection";
 // import TestimonialsSection from "@/components/TestimonialsSection";
 // import BlogSection from "@/components/BlogSection";
-// import GitHubSection from "@/components/GitHubSection";
+import GitHubSection from "@/components/GitHubSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 import SplashScreen from "@/components/SplashScreen";
@@ -37,7 +37,7 @@ const Index = () => {
         <TerminalSection />
         {/* <TestimonialsSection /> */}
         {/* <BlogSection /> */}
-        {/* <GitHubSection /> */}
+        <GitHubSection />
         <ContactSection />
         <Footer />
         <AccentColorPicker />

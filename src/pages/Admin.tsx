@@ -19,6 +19,8 @@ import {
   X,
   Save,
   Download,
+  Search,
+  Filter,
 } from "lucide-react";
 import { toast } from "sonner";
 import AdminProjectForm from "@/components/admin/AdminProjectForm";
@@ -45,6 +47,8 @@ const Admin = () => {
   const [manualLang, setManualLang] = useState("");
   const [manualTags, setManualTags] = useState("");
   const [isSubmittingManual, setIsSubmittingManual] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterTab, setFilterTab] = useState<"all" | "github" | "manual" | "featured" | "hidden">("all");
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/login");
@@ -56,6 +60,21 @@ const Admin = () => {
     if (username) setGithubUsername(username);
     if (resumeUrl) setResumeLink(resumeUrl);
   }, [username, resumeUrl]);
+
+  const filteredProjects = JSON.parse(JSON.stringify(allProjects))
+    .filter((project: any) => {
+      const name = project.isManual ? project.manual.name : project.name;
+      const matchesSearch = name.toLowerCase().includes(searchTerm.toLowerCase());
+
+      if (!matchesSearch) return false;
+
+      if (filterTab === "github") return !project.isManual;
+      if (filterTab === "manual") return project.isManual;
+      if (filterTab === "featured") return project.isFeatured;
+      if (filterTab === "hidden") return project.isHidden;
+
+      return true;
+    });
 
   if (authLoading || isLoading) {
     return (
@@ -392,7 +411,7 @@ const Admin = () => {
           <div className="glass-card p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="font-heading text-lg font-semibold flex items-center gap-2">
-                <Lock size={20} className="text-accent" /> Private Projects
+                <Lock size={20} className="text-accent" /> Project Management
               </h2>
               <button
                 onClick={() => {
@@ -408,6 +427,45 @@ const Admin = () => {
                 {showManualForm ? <X size={14} /> : <Plus size={14} />}
                 {showManualForm ? "Cancel" : "Add Private"}
               </button>
+            </div>
+
+            {/* Filter Bar */}
+            <div className="mb-6 space-y-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Search projects..."
+                  className="w-full pl-10 pr-4 py-2 rounded-lg bg-secondary/50 border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                />
+              </div>
+              
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { id: "all", label: "All" },
+                  { id: "github", label: "GitHub" },
+                  { id: "manual", label: "Private" },
+                  { id: "featured", label: "Featured" },
+                  { id: "hidden", label: "Hidden" },
+                ].map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setFilterTab(tab.id as any)}
+                    className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                      filterTab === tab.id
+                        ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                        : "bg-secondary text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+                <div className="ml-auto text-[10px] uppercase tracking-wider text-muted-foreground flex items-center">
+                  Showing {filteredProjects.length} of {allProjects.length}
+                </div>
+              </div>
             </div>
 
             {showManualForm && (
@@ -430,13 +488,13 @@ const Admin = () => {
             )}
 
             <div className="space-y-3">
-              {allProjects.length === 0 && (
-                <p className="text-sm text-muted-foreground text-center py-4">
-                  No projects found.
+              {filteredProjects.length === 0 && (
+                <p className="text-sm text-muted-foreground text-center py-8">
+                  {searchTerm ? "No projects match your search." : "No projects found in this category."}
                 </p>
               )}
 
-              {allProjects.map((project) => (
+              {filteredProjects.map((project) => (
                 <AdminProjectItem
                   key={project.isManual ? project.manual?.id : project.name}
                   project={project}

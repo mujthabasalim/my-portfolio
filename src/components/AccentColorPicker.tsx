@@ -253,7 +253,7 @@ function loadRecentColors(): string[] {
         .filter((c: string) => /^#[0-9a-fA-F]{6}$/.test(c))
         .slice(0, MAX_RECENT);
   } catch (err) {
-    console.log(err);
+    // Silent catch
   }
   return [];
 }

@@ -63,7 +63,16 @@ async function fetchGitHubUsername(): Promise<string> {
     .select("value")
     .eq("key", "github_username")
     .single();
-  return data?.value || "octocat";
+  return data?.value || "mujthabasalim";
+}
+
+async function fetchResumeUrl(): Promise<string> {
+  const { data } = await supabase
+    .from("portfolio_config")
+    .select("value")
+    .eq("key", "resume_url")
+    .single();
+  return data?.value || "/resume.pdf";
 }
 
 async function fetchGitHubRepos(username: string): Promise<GitHubRepo[]> {
@@ -105,6 +114,11 @@ export function useGitHubProjects() {
     staleTime: 5 * 60 * 1000,
   });
 
+  const resumeQuery = useQuery({
+    queryKey: ["resume-url"],
+    queryFn: fetchResumeUrl,
+  });
+
   const reposQuery = useQuery({
     queryKey: ["github-repos", usernameQuery.data],
     queryFn: () => fetchGitHubRepos(usernameQuery.data!),
@@ -127,7 +141,9 @@ export function useGitHubProjects() {
   const contributionsQuery = useQuery({
     queryKey: ["github-contributions", usernameQuery.data],
     queryFn: async () => {
-      const res = await fetch(`https://github-contributions-api.deno.dev/${usernameQuery.data}.json`);
+      const res = await fetch(
+        `https://github-contributions-api.deno.dev/${usernameQuery.data}.json`,
+      );
       if (!res.ok) throw new Error("Failed to fetch contributions");
       return res.json();
     },
@@ -202,9 +218,19 @@ export function useGitHubProjects() {
     projects: visibleProjects,
     allProjects,
     isLoading:
-      usernameQuery.isLoading || reposQuery.isLoading || manualQuery.isLoading || contributionsQuery.isLoading,
-    error: usernameQuery.error || reposQuery.error || manualQuery.error || contributionsQuery.error,
+      usernameQuery.isLoading ||
+      reposQuery.isLoading ||
+      manualQuery.isLoading ||
+      contributionsQuery.isLoading ||
+      resumeQuery.isLoading,
+    error:
+      usernameQuery.error ||
+      reposQuery.error ||
+      manualQuery.error ||
+      contributionsQuery.error ||
+      resumeQuery.error,
     username: usernameQuery.data,
+    resumeUrl: resumeQuery.data || "/resume.pdf",
     totalContributions: contributionsQuery.data?.totalContributions || 0,
     contributionWeeks: contributionsQuery.data?.contributions || [],
   };

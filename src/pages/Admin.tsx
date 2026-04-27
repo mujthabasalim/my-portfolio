@@ -18,6 +18,7 @@ import {
   Lock,
   X,
   Save,
+  Download,
 } from "lucide-react";
 import { toast } from "sonner";
 import AdminProjectForm from "@/components/admin/AdminProjectForm";
@@ -27,10 +28,11 @@ const Admin = () => {
   const { user, isAdmin, loading: authLoading, signOut } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { allProjects, isLoading, username } = useGitHubProjects();
 
   const [githubUsername, setGithubUsername] = useState("");
   const [savingUsername, setSavingUsername] = useState(false);
+  const [resumeLink, setResumeLink] = useState("");
+  const [savingResume, setSavingResume] = useState(false);
   const [editingProject, setEditingProject] = useState<string | null>(null);
   const [editDescription, setEditDescription] = useState("");
 
@@ -48,9 +50,12 @@ const Admin = () => {
     if (!authLoading && !user) navigate("/login");
   }, [authLoading, user, navigate]);
 
+  const { allProjects, isLoading, username, resumeUrl } = useGitHubProjects();
+
   useEffect(() => {
     if (username) setGithubUsername(username);
-  }, [username]);
+    if (resumeUrl) setResumeLink(resumeUrl);
+  }, [username, resumeUrl]);
 
   if (authLoading || isLoading) {
     return (
@@ -96,6 +101,21 @@ const Admin = () => {
       queryClient.invalidateQueries({ queryKey: ["github-repos"] });
     }
     setSavingUsername(false);
+  };
+
+  const handleSaveResume = async () => {
+    setSavingResume(true);
+    const { error } = await supabase
+      .from("portfolio_config")
+      .upsert({ key: "resume_url", value: resumeLink }, { onConflict: "key" });
+
+    if (error) {
+      toast.error("Failed to update resume link");
+    } else {
+      toast.success("Resume link updated!");
+      queryClient.invalidateQueries({ queryKey: ["resume-url"] });
+    }
+    setSavingResume(false);
   };
 
   const handleManualSubmit = async (e: React.FormEvent) => {
@@ -326,6 +346,39 @@ const Admin = () => {
                 className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-2"
               >
                 {savingUsername ? (
+                  <Loader2 size={14} className="animate-spin" />
+                ) : (
+                  <Save size={14} />
+                )}
+                Save
+              </button>
+            </div>
+          </div>
+
+          {/* Resume Config */}
+          <div className="glass-card p-6">
+            <h2 className="font-heading text-lg font-semibold mb-4 flex items-center gap-2">
+              <Download size={20} className="text-primary" /> Resume Configuration
+            </h2>
+            <div className="flex gap-3 items-end">
+              <div className="flex-1">
+                <label className="text-sm font-medium text-foreground block mb-1.5">
+                  Resume URL (Google Drive, Supabase link, etc.)
+                </label>
+                <input
+                  type="text"
+                  value={resumeLink}
+                  onChange={(e) => setResumeLink(e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  placeholder="e.g. https://drive.google.com/..."
+                />
+              </div>
+              <button
+                onClick={handleSaveResume}
+                disabled={savingResume}
+                className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-2"
+              >
+                {savingResume ? (
                   <Loader2 size={14} className="animate-spin" />
                 ) : (
                   <Save size={14} />

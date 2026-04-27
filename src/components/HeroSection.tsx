@@ -1,6 +1,7 @@
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import { Download } from "lucide-react";
+import { useGitHubProjects } from "@/hooks/useGitHubProjects";
 
 const titles = [
   "Full-Stack Web Apps",
@@ -19,6 +20,7 @@ const codeLines = [
 ];
 
 const HeroSection = () => {
+  const { resumeUrl } = useGitHubProjects();
   const [titleIndex, setTitleIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
   const [deleting, setDeleting] = useState(false);
@@ -167,8 +169,9 @@ const HeroSection = () => {
               <div className="absolute inset-0 bg-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </a>
             <a
-              href="/resume.pdf"
-              download
+              href={resumeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-lg border border-primary/30 bg-primary/5 text-primary font-medium text-sm hover:bg-primary/10 hover:border-primary/50 hover:shadow-[0_0_20px_hsl(175_80%_50%/0.15)] transition-all duration-300"
             >
               <Download className="w-4 h-4" />

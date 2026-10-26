@@ -141,9 +141,7 @@ export function useGitHubProjects() {
   const contributionsQuery = useQuery({
     queryKey: ["github-contributions", usernameQuery.data],
     queryFn: async () => {
-      const res = await fetch(
-        `https://github-contributions-api.deno.dev/${usernameQuery.data}.json`,
-      );
+      const res = await fetch(`/api/github?username=${usernameQuery.data}`);
       if (!res.ok) throw new Error("Failed to fetch contributions");
       return res.json();
     },
@@ -227,7 +225,7 @@ export function useGitHubProjects() {
       usernameQuery.error ||
       reposQuery.error ||
       manualQuery.error ||
-      contributionsQuery.error ||
+      // contributionsQuery.error ||
       resumeQuery.error,
     username: usernameQuery.data,
     resumeUrl: resumeQuery.data || "/resume.pdf",

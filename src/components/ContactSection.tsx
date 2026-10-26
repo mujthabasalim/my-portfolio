@@ -95,7 +95,7 @@ const ContactSection = () => {
           transition={{ duration: 0.7 }}
           className="text-center mb-12"
         >
-          <p className="font-mono text-sm text-primary mb-3">05. Contact</p>
+          <p className="font-mono text-sm text-primary mb-3">06. Contact</p>
           <h2 className="font-heading text-3xl md:text-5xl font-bold mb-4">
             Let's work together<span className="text-primary">.</span>
           </h2>
